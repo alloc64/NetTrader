@@ -1,0 +1,170 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1C69A298-B924-4517-ABE9-76CAB0CB5D16}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>BinanceExchange.API</RootNamespace>
+    <AssemblyName>BinanceExchange.API</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.2.0.0\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.4.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Primitives">
+      <HintPath>..\packages\Microsoft.Extensions.Primitives.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Caching.Abstractions">
+      <HintPath>..\packages\Microsoft.Extensions.Caching.Abstractions.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Caching.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Options">
+      <HintPath>..\packages\Microsoft.Extensions.Options.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Options.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Caching.Memory">
+      <HintPath>..\packages\Microsoft.Extensions.Caching.Memory.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Caching.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.WebRequest" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Caching\APICacheManager.cs" />
+    <Compile Include="Caching\SingletonCacheManager.cs" />
+    <Compile Include="Caching\Interfaces\IAPICacheManager.cs" />
+    <Compile Include="Client\BinanceClient.cs" />
+    <Compile Include="Client\ClientConfiguration.cs" />
+    <Compile Include="Client\Interfaces\IBinanceClient.cs" />
+    <Compile Include="Converter\EpochTimeConverter.cs" />
+    <Compile Include="Converter\KlineCandleSticksConverter.cs" />
+    <Compile Include="Converter\TimespanConverter.cs" />
+    <Compile Include="Converter\TraderPriceConverter.cs" />
+    <Compile Include="Enums\DepositHistoryStatus.cs" />
+    <Compile Include="Enums\EndpointSecurityType.cs" />
+    <Compile Include="Enums\ExecutionType.cs" />
+    <Compile Include="Enums\HttpVerb.cs" />
+    <Compile Include="Enums\KlineInterval.cs" />
+    <Compile Include="Enums\OrderRejectReason.cs" />
+    <Compile Include="Enums\OrderSide.cs" />
+    <Compile Include="Enums\OrderStatus.cs" />
+    <Compile Include="Enums\OrderType.cs" />
+    <Compile Include="Enums\TimeInForce.cs" />
+    <Compile Include="Enums\WithdrawHistoryStatus.cs" />
+    <Compile Include="Extensions\DateTimeExtensions.cs" />
+    <Compile Include="Extensions\EnumExtensions.cs" />
+    <Compile Include="Market\TradingPairSymbols.cs" />
+    <Compile Include="Models\Request\AccountRequest.cs" />
+    <Compile Include="Models\Request\AllOrdersRequest.cs" />
+    <Compile Include="Models\Request\AllTradesRequest.cs" />
+    <Compile Include="Models\Request\CancelOrderRequest.cs" />
+    <Compile Include="Models\Request\CreateOrderRequest.cs" />
+    <Compile Include="Models\Request\CurrentOpenOrdersRequest.cs" />
+    <Compile Include="Models\Request\DepositAddressRequest.cs" />
+    <Compile Include="Models\Request\FundHistoryRequest.cs" />
+    <Compile Include="Models\Request\GetCompressedAggregateTradesRequest.cs" />
+    <Compile Include="Models\Request\GetKlinesCandlesticksRequest.cs" />
+    <Compile Include="Models\Request\QueryOrderRequest.cs" />
+    <Compile Include="Models\Request\WithdrawRequest.cs" />
+    <Compile Include="Models\Request\Interfaces\IRequest.cs" />
+    <Compile Include="Models\Response\AccountInformationResponse.cs" />
+    <Compile Include="Models\Response\AccountTradeReponse.cs" />
+    <Compile Include="Models\Response\BalanceResponse.cs" />
+    <Compile Include="Models\Response\CancelOrderResponse.cs" />
+    <Compile Include="Models\Response\CompressedAggregateTradeResponse.cs" />
+    <Compile Include="Models\Response\CreateOrderResponse.cs" />
+    <Compile Include="Models\Response\DepositAddressResponse.cs" />
+    <Compile Include="Models\Response\DepositListItem.cs" />
+    <Compile Include="Models\Response\DepositListResponse.cs" />
+    <Compile Include="Models\Response\EmptyResponse.cs" />
+    <Compile Include="Models\Response\KlineCandleStickResponse.cs" />
+    <Compile Include="Models\Response\OrderBookResponse.cs" />
+    <Compile Include="Models\Response\OrderResponse.cs" />
+    <Compile Include="Models\Response\ServerTimeResponse.cs" />
+    <Compile Include="Models\Response\SymbolOrderBookResponse.cs" />
+    <Compile Include="Models\Response\SymbolPriceChangeTickerResponse.cs" />
+    <Compile Include="Models\Response\SymbolPriceResponse.cs" />
+    <Compile Include="Models\Response\TradeResponse.cs" />
+    <Compile Include="Models\Response\UserDataStreamResponse.cs" />
+    <Compile Include="Models\Response\WithdrawListItem.cs" />
+    <Compile Include="Models\Response\WithdrawListResponse.cs" />
+    <Compile Include="Models\Response\WithdrawResponse.cs" />
+    <Compile Include="Models\Response\Error\BinanceBadRequestException.cs" />
+    <Compile Include="Models\Response\Error\BinanceError.cs" />
+    <Compile Include="Models\Response\Error\BinanceException.cs" />
+    <Compile Include="Models\Response\Error\BinanceServerException.cs" />
+    <Compile Include="Models\Response\Error\BinanceTimeoutException.cs" />
+    <Compile Include="Models\Response\Interfaces\IBalanceResponse.cs" />
+    <Compile Include="Models\Response\Interfaces\IConfirmationResponse.cs" />
+    <Compile Include="Models\Response\Interfaces\IResponse.cs" />
+    <Compile Include="Models\ResultSets\BuySellDepthVolume.cs" />
+    <Compile Include="Models\WebSocket\BalanceResponseData.cs" />
+    <Compile Include="Models\WebSocket\BinanceAccountUpdateData.cs" />
+    <Compile Include="Models\WebSocket\BinanceAggregateTradeData.cs" />
+    <Compile Include="Models\WebSocket\BinanceDepthData.cs" />
+    <Compile Include="Models\WebSocket\BinanceKline.cs" />
+    <Compile Include="Models\WebSocket\BinanceKlineData.cs" />
+    <Compile Include="Models\WebSocket\BinanceTradeOrderData.cs" />
+    <Compile Include="Models\WebSocket\DepthCacheObject.cs" />
+    <Compile Include="Models\WebSocket\KlineCacheObject.cs" />
+    <Compile Include="Models\WebSocket\KlineCandleStick.cs" />
+    <Compile Include="Models\WebSocket\KlineIntervalCacheObject.cs" />
+    <Compile Include="Models\WebSocket\TradeDepthDelta.cs" />
+    <Compile Include="Models\WebSocket\Interfaces\ISymbolWebSocketResponse.cs" />
+    <Compile Include="Models\WebSocket\Interfaces\IWebSocketResponse.cs" />
+    <Compile Include="Utility\Guard.cs" />
+    <Compile Include="Websockets\AbstractBinanceWebSocketClient.cs" />
+    <Compile Include="Websockets\BinanceWebSocket.cs" />
+    <Compile Include="Websockets\BinanceWebsocketMessageHandler.cs" />
+    <Compile Include="Websockets\DisposableBinanceWebSocketClient.cs" />
+    <Compile Include="Websockets\IBinanceWebSocketClient.cs" />
+    <Compile Include="Websockets\InstanceBinanceWebSocketClient.cs" />
+    <Compile Include="Websockets\UserDataWebSocketMessages.cs" />
+    <Compile Include="Websockets\WebSocketConnectionFunc.cs" />
+    <Compile Include="APIProcessor.cs" />
+    <Compile Include="BinanceEndpointData.cs" />
+    <Compile Include="Endpoints.cs" />
+    <Compile Include="IAPIProcessor.cs" />
+    <Compile Include="RequestClient.cs" />
+    <Compile Include="ResultTransformations.cs" />
+    <Compile Include="Utility\LongUtils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WebsocketSharp\websocket-sharp\websocket-sharp.csproj">
+      <Project>{B357BAC7-529E-4D81-A0D2-71041B19C8DE}</Project>
+      <Name>websocket-sharp</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
+</Project>

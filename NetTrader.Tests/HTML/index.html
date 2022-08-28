@@ -1,0 +1,63 @@
+﻿<html>
+    <head>
+      <style>
+        .graph {
+          height: 600px;
+          width: 100%;
+        }
+      </style>
+    </head>
+    <script src="http://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <body>
+        <div class="body">
+            <div class="container">
+                <div class="graph" id="graph">
+            </div>
+        </div>
+    <body>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="./history.js"></script>
+    <script type="text/javascript">$(document).ready(function() {
+            google.charts.load('visualization', '1', { packages: ['corechart'] });
+            google.charts.setOnLoadCallback(drawChart);
+            function drawChart() {
+                var options = {
+                    chart: {
+                        title: '',
+                        subtitle: ''
+                    },
+                    width: "100%",
+                    height: "100%",
+                    vAxis: {
+                        gridlines: {
+                            color: 'transparent'
+                        }
+                    },
+                    series: {
+                        1: {
+                            // set any applicable options on the first series
+                            color: '#FF0000',
+                            pointSize: 5,
+                        },
+                        2: {
+                            color: '#00FF00',
+                            pointSize: 5,
+                        },
+                    }
+                };
+
+                var data = new google.visualization.DataTable();
+
+                data.addColumn('string', 'time');
+                data.addColumn('number', 'price');
+
+                data.addColumn('number', 'buy trade');
+                data.addColumn('number', 'sell trade');
+
+                data.addRows(historyDataPoints);
+
+                var chart = new google.visualization.LineChart(document.getElementById('graph'));
+                chart.draw(data, options);
+            }
+});</script>
+</html>

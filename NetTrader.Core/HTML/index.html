@@ -1,0 +1,714 @@
+<html>
+    <head>
+    </head>
+    <style>
+    /***********************************************************************
+     * Copyright (c) 2017 Milan Jaitner                                   *
+     * Distributed under the MIT software license, see the accompanying    *
+     * file COPYING or https://www.opensource.org/licenses/mit-license.php.*
+     ***********************************************************************/
+
+    body {
+        position: relative;
+        margin: 0;
+        font-family: "opensans",sans-serif,"btcglyph";
+        font-size: 11px;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    .body {
+        width: 1500px;
+        margin: 0px auto;
+    }
+
+    .graph {
+        width: 750px;
+        height: 350px;
+        float:left;
+    }
+
+    .top-bar {
+        width: 1500px;
+        float: left;
+        border-bottom: 1px solid #DDD;
+    }
+
+    .top-bar > div {
+        float: left;
+        padding-right: 20px;
+    }
+
+    .controls-container {
+        width: 150px;
+        height: 330px;
+        float:left;
+        border-right: 1px solid #DDD;
+        padding: 10px;
+        overflow: scroll;
+    }
+
+    .trades-container {
+        width: 379px;
+        height: 780px;
+        float:right;
+        border-left: 1px solid #DDD;
+        padding: 10px;
+        margin-top: -95px;
+    }
+
+    .trades {
+        height: 500px;
+        overflow: scroll;
+    }
+
+    .profits {
+        width: 379px;
+        height: 150px;
+        overflow: scroll;
+    }
+
+    .profit {
+        border-bottom: 1px solid #DDD;
+        width: 100%;
+        height: 55px;
+        margin-bottom: 5px;
+    }
+
+    .profit-amount {
+        font-size: 13px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .trades {
+        margin-top:50px;
+        background: #FFF;
+    }
+
+    .Buy {
+        font-size: 13px;
+        font-weight: bold;
+        color: #00CC00;
+    }
+
+    .Sell {
+        font-size: 13px;
+        font-weight: bold;
+        color: #CC0000;
+    }
+
+    .orders {
+        width: 1100px;
+        height: 400px;
+        overflow: scroll;
+        float: left;
+        border-top: 1px solid #DDD;
+    }
+
+    .orders .order {
+       padding: 5px;
+        float: left;
+        width: 98%;
+        border-bottom: 1px solid #EEE;
+    }
+    .orders .order span {
+        margin: 0 10px 0 10px
+    }
+    .orders .order .cancel {
+        float:right;
+    }
+
+    .orders-container {
+        height: 200px;
+        overflow: scroll;
+    }
+
+    .console {
+        width: 1100px;
+        height: 150px;
+        overflow: scroll;
+        float: left;
+        border-top: 1px solid #DDD;
+    }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="./reconnecting-websocket.js"></script>
+    <body>
+        <div class="body">
+            <div class="top-bar">
+                <div class="last-trade">
+                    <h2>Last Trade</h2>
+                    <h2 class="last-trade-value">N/A</h2>
+                </div>
+                <div class="servers">
+                    <h2>Server</h2>
+                    <select id="server-list">
+                        <option value="unknown" />Unknown</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="container">
+                <div class="controls-container">
+                        <div class="balance-container">
+                            <strong>Balance</strong>
+                            <div class="balance">
+                                <span>Unknown<span>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="controls">
+                            <div class="target-base-price">
+                                <span>Target Base Price</span>
+                                <input type="text" value="0" class="target-base-price-input" />
+                                <input type="button" value="Set" id="set-target-base-price" />
+                            </div>
+                            <div class="tbp-recalculation-offset">
+                                <span>TBP Recalc Offset</span>
+                                <input type="text" value="0" class="tbp-recalculation-offset-input" />
+                                <input type="button" value="Set" id="set-tbp-recalculation-offset" />
+                            </div>
+                            <div class="tbp-recalculation-price-offset">
+                                <span>TBP Recalc Price Offset</span>
+                                <input type="text" value="0" class="tbp-recalculation-price-offset-input" />
+                                <input type="button" value="Set" id="set-tbp-recalculation-price-offset" />
+                            </div>
+                            <div class="stop-loss-threshold">
+                                <span>Stop Loss Threshold</span>
+                                <input type="text" value="0" class="stop-loss-threshold-input" />
+                                <input type="button" value="Set" id="set-stop-loss-threshold" />
+                            </div>
+                            <div class="stop-loss-base-price-offset">
+                                <span>Stop Loss Base Price Offset</span>
+                                <input type="text" value="0" class="stop-loss-base-price-offset-input" />
+                                <input type="button" value="Set" id="set-stop-loss-base-price-offset" />
+                            </div>
+                        </div>
+                    </div>
+                <div class="graph" id="graph">
+                </div>
+                <div class="trades-container">
+                    <h2>Trades</h2>
+                    <div class="trades">
+                    </div>
+                    <h2>Profits - <span class="total-profit">0</span> EUR</h2>
+                    <div class="profits">
+                    </div>
+                </div>
+            </div>
+
+            <div class="orders">
+                <span style="font-size:1.5em;font-weight:bold">Orders</span>
+                <a style="margin-left:10px; font-size:12px" href="#" id="requeue-orders">REQUEUE ORDERS</a>
+                <a style="margin-left:10px; font-size:12px" href="#" id="cancel-all-orders">CANCEL ORDERS</a>
+                <a style="margin-left:10px; font-size:12px" href="#" id="trigger-stop-loss">STOP LOSS</a>
+                <div class="orders-container">
+                    <div class="sell-orders">
+                    </div>
+                    <div class="buy-orders">
+                    </div>
+            </div>
+            <div class="console">
+            </div>
+        </div>
+    <body>
+    <script type="text/javascript">
+
+        function setCookie(cname, cvalue, exdays)
+        {
+            var d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            var expires = "expires=" + d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
+
+        function getCookie(cname)
+        {
+            var name = cname + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++)
+            {
+                var c = ca[i];
+                while (c.charAt(0) == ' ')
+                {
+                    c = c.substring(1);
+                }
+
+                if (c.indexOf(name) == 0)
+                    return c.substring(name.length, c.length);
+            }
+            return "";
+        }
+
+        var socket;
+        var serverUrl;
+
+        var serverList =
+        [
+           {
+               "name": "localhost",
+               "url": "ws://localhost:12777"
+           },
+           {
+               "name": "BTC/EUR",
+               "url": "wss://BTCCTraderWebSocket3327:Gewdkl45ewNFD@nettraderhost.com:12777"
+           },
+           {
+               "name": "ETH/EUR",
+               "url": "wss://ETHCTraderWebSocket3327:Gewdkl45ewNFD@nettraderhost.com:12888"
+           }
+        ];
+
+        $(document).ready(function()
+        {
+            var graphData;
+            var graphChart;
+
+            var graphOptions = {
+                explorer: {axis: 'horizontal', keepInBounds: true},
+                legend: 'none',
+                bar: { groupWidth: '100%' }, // Remove space between bars.
+                candlestick: {
+                  fallingColor: { strokeWidth: 0, fill: '#a52714' }, // red
+                  risingColor: { strokeWidth: 0, fill: '#0f9d58' }   // green
+                },
+                displayAnnotations: true,
+                series: {
+                    1: {
+                      type: 'line',
+                    }
+                }
+            };
+
+            var serverListSelect = $("#server-list");
+            serverListSelect.children().remove();
+            serverListSelect.change(function(e)
+            {
+                setCookie("serverIdx", this.selectedIndex, 365);
+
+                selectServer(this.selectedIndex);
+
+                location.reload();
+            });
+
+            for(i = 0; i < serverList.length; i++)
+            {
+                var server = serverList[i];
+                //console.log(server);
+
+                var option = $("<option/>").attr("value", server.name).text(server.name);
+                serverListSelect.append(option);
+            }
+
+            function selectServer(serverId)
+            {
+                serverListSelect.prop('selectedIndex', serverId);
+
+                serverUrl = serverList[serverId].url;
+
+                //console.log("Setting server: " + serverUrl);
+
+                if(socket != undefined)
+                    socket.close();
+
+                socket = new ReconnectingWebSocket(serverUrl + "/channel");
+
+                socket.debug = true;
+                socket.reconnectInterval = 4000;
+
+                socket.onopen = function (event)
+                {
+                    sendMessage("GetTargetBasePrice");
+                    sendMessage("GetOrders");
+                    sendMessage("GetProfitsMessage");
+                    sendMessage("GetAccountBalanceMessage");
+                };
+
+                socket.onmessage = function (event)
+                {
+                    var message = JSON.parse(event.data);
+
+                    console.log("Received " + message.MessageType + ", " + message.Payload);
+
+                    if (message != undefined)
+                    {
+                        switch(message.MessageType)
+                        {
+                            case "Console":
+                                log(message.Payload);
+                            break;
+
+                            case "GetTargetBasePrice":
+                                var priceInfo = message.Payload;
+
+                                if(priceInfo != undefined)
+                                {
+                                    $(".target-base-price-input").val(priceInfo.BasePrice);
+                                    $(".tbp-recalculation-offset-input").val(priceInfo.TBPRecalculationOffset);
+                                    $(".tbp-recalculation-price-offset-input").val(priceInfo.TBPRecalculationPriceOffset);
+                                    $(".stop-loss-threshold-input").val(priceInfo.StopLossThreshold);
+                                    $(".stop-loss-base-price-offset-input").val(priceInfo.StopLossBasePriceOffset);
+                                }
+                            break;
+
+                            case "Match":
+                                addMatchTrade(message.Payload);
+                            break;
+
+                            case "GetOrders":
+                                var orders = message.Payload;
+
+                                if(orders != undefined)
+                                {
+                                    clearOrders();
+
+                                    for(i = 0; i < orders.length; i++)
+                                        addOrUpdateOrder(orders[i]);
+                                }
+                            break;
+
+                            case "OrderStateChanged":
+                                var order = message.Payload;
+
+                                if(order != undefined)
+                                    addOrUpdateOrder(order);
+                            break;
+
+                            case "GetProfitsMessage":
+                                updateProfits(message.Payload);
+                            break;
+
+                            case "GetAccountBalanceMessage":
+                                updateAccountBalance(message.Payload);
+                            break;
+
+                            default:
+                                log("Unknown message received: " + JSON.stringify(message));
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        log("Received message in invalid format: " + event.data);
+                    }
+                }
+            }
+
+            var serverIdx = getCookie("serverIdx");
+
+            selectServer(serverIdx == undefined || serverIdx.length < 1 ? 0 : serverIdx);
+
+            $("#set-target-base-price").click(function()
+            {
+                if (confirm('Change Target Base Price?'))
+                {
+                    sendMessage("SetTargetBasePrice", $(".target-base-price-input").val());
+                    clearOrders();
+                }
+            });
+
+            $(".balance-container").click(function()
+            {
+                sendMessage("GetAccountBalanceMessage");
+            });
+
+            $("#requeue-orders").click(function()
+            {
+                sendMessage("RestartTrading");
+
+                clearOrders();
+            });
+
+            $("#cancel-all-orders").click(function()
+            {
+                sendMessage("CancelAllOrders");
+
+                clearOrders();
+            });
+
+            $("#set-tbp-recalculation-offset").click(function()
+            {
+                sendMessage("SetTBPRecalculationOffsetMessage", $(".tbp-recalculation-offset-input").val());
+            });
+
+            $("#set-tbp-recalculation-price-offset").click(function()
+            {
+                sendMessage("SetTBPRecalculationPriceOffsetMessage", $(".tbp-recalculation-price-offset-input").val());
+            });
+
+            $("#trigger-stop-loss").click(function()
+            {
+                sendMessage("StopLossMessage");
+            });
+
+            $("#set-stop-loss-threshold").click(function()
+            {
+                sendMessage("SetStopLossThreshold", $(".stop-loss-threshold-input").val());
+            });
+
+            $("#set-stop-loss-base-price-offset").click(function()
+            {
+                sendMessage("SetStopLossBasePriceOffset", $(".stop-loss-base-price-offset-input").val());
+            });
+
+            google.charts.load('current', {'packages':['corechart']});
+            google.charts.setOnLoadCallback(drawChart);
+            function drawChart()
+            {
+                graphData = new google.visualization.DataTable();
+
+                graphData.addColumn('string', 'time');
+                graphData.addColumn('number', 'low');
+                graphData.addColumn('number', 'open');
+                graphData.addColumn('number', 'close');
+                graphData.addColumn('number', 'high');
+                graphData.addColumn('number', 'price');
+                //graphData.addColumn({type: 'string', role:'annotation'});
+                //graphData.addColumn({type: 'string', role:'annotationText'});
+
+                graphChart = new google.visualization.CandlestickChart(document.getElementById('graph'));
+                graphChart.draw(graphData, graphOptions);
+            }
+
+            setTimeout(function()
+            {
+                sendMessage("GetAccountBalanceMessage");
+            }, 15000);
+
+            function updateAccountBalance(accounts)
+            {
+                if(accounts == undefined)
+                    return;
+
+                var $balanceContainer = $(".balance");
+
+                $balanceContainer.empty();
+
+                for(var i = 0; i < accounts.length; i++)
+                {
+                    var account = accounts[i];
+                    var row = $("<div><strong>" + account.Currency + ":</strong> " + account.Available + "</div>");
+
+                    $balanceContainer.append(row);
+                }
+            }
+
+            var candleIdx = -1;
+            function updateGraph(trade)
+            {
+                if(graphData == undefined)
+                    return;
+
+                var candle = trade.Candle;
+
+                var candleGraphData = [formatTimestamp(candle.Time), candle.Low, candle.Open, candle.Close, candle.High, trade.Price];
+
+                if(graphData.getNumberOfRows() < 1 || candle.Clear)
+                {
+                    graphData.addRow(candleGraphData);
+
+                    candleIdx++;
+                }
+                else
+                {
+                    graphData.setValue(candleIdx, 1, candle.Low);
+                    graphData.setValue(candleIdx, 2, candle.Open);
+                    graphData.setValue(candleIdx, 3, candle.Close);
+                    graphData.setValue(candleIdx, 4, candle.High);
+                    graphData.setValue(candleIdx, 5, trade.Price);
+                }
+
+                graphChart.draw(graphData, graphOptions);
+            }
+
+            function addMatchTrade(trade)
+            {
+                if(trade == undefined)
+                    return;
+
+                var price = parseFloat(trade.Price);
+
+                /*
+                var price = trade.Price.toFixed(2);
+
+                for(o = 0; o < trade.BuyTiers.length; o++)
+                {
+                }
+
+                for(o = 0; o < trade.SellTiers.length; o++)
+                {
+                }
+                */
+
+                //TODO: update trade tiers in graph
+
+                updateGraph(trade);
+
+                var tradeType = trade.Type;
+
+                // gdax nam z nejakyho duvodu ty typy vraci obracene
+                if(trade.ExchangeType == "GDAX")
+                {
+                    if(trade.Type == "Buy")
+                        tradeType = "Sell";
+                    else
+                        tradeType = "Buy";
+                }
+
+                var $tradesContainer = $(".trades");
+
+                $tradesContainer.prepend("<span style=\"display:block\">" + parseFloat(trade.Amount).toFixed(8) + " - <span class=" + tradeType + ">" + price + "</span> - " + formatTimestamp(trade.Time) + "</span>");
+
+                var children = $tradesContainer.children();
+                if(children.length > 25)
+                    children.last().remove();
+
+                var lastTradeValue = price + "EUR";
+                $(".last-trade-value").text(lastTradeValue);
+
+                document.title = lastTradeValue;
+            }
+
+            function addOrUpdateOrder(order)
+            {
+                var row = $("#" + order.OrderId);
+
+                if(!row.length)
+                {
+                    row = $("<div><span style='width:150px;float:left;'><span class='tierId'></span><span class='amount'></span><span class='price'></span></span><a class='cancel " + order.OrderId + "' href='#'>CANCEL</a></div>").attr("id", order.OrderId).attr("class", "order " + order.OrderType).attr("data-sort", order.TierId);
+
+                    var $ordersContainer;
+
+                    row.append("<a class='market " + order.OrderId + "' href='#'>MARKET</a>");
+
+                    if(order.OrderType == "Buy")
+                    {
+                        row.append("<span> </span>");
+                        row.append("<a class='remove " + order.OrderId + "' title='Cancels this order and also cancels parent buy order, so after restart this order will not be requeued.' href='#'>REMOVE</a>");
+                        $ordersContainer = $(".buy-orders");
+                    }
+                    else
+                    {
+                        $ordersContainer = $(".sell-orders");
+                    }
+
+                    $ordersContainer.append(row);
+
+                    $ordersContainer.sort(function (a, b)
+                    {
+                        var contentA = parseInt($(a).attr("data-sort"));
+                        var contentB = parseInt($(b).attr("data-sort"));
+                        return (contentA < contentB) ? -1 : (contentA > contentB) ? 1 : 0;
+                    });
+
+                    row.find(".market").click(function()
+                    {
+                        sendMessage("MarketOrder", row.attr("id"));
+                    })
+                    row.find(".remove").click(function()
+                    {
+                        row.remove();
+                        sendMessage("RemoveOrder", row.attr("id"));
+                    })
+                    row.find(".cancel").click(function()
+                    {
+                        row.remove();
+                        sendMessage("CancelOrder", row.attr("id"));
+                    })
+                }
+
+                if(order.OrderState == "Filled" ||
+                    order.OrderState == "Traded" ||
+                    order.OrderState == "Cancelled")
+                {
+                    row.remove();
+                }
+                else
+                {
+                    row.find(".tierId").text(order.TierId);
+                    row.find(".amount").text(order.Amount);
+                    row.find(".price").text(order.Price);
+                }
+
+                //sendMessage("GetAccountBalanceMessage");
+            }
+
+            function updateProfits(profitInfo)
+            {
+                if(profitInfo == undefined)
+                    return;
+
+                $(".total-profit").text(profitInfo.ProfitSum);
+
+                $profitsContainer = $(".profits");
+
+                $profitsContainer.empty();
+
+                var profits = profitInfo.Profits;
+
+                for(var i = 0; i < profits.length; i++)
+                {
+                    var profit = profits[i];
+                    var buy = profit.BuyOrder;
+                    var sell = profit.SellOrder;
+
+                    var row = $("<div class='profit'><span><strong>" + buy.CurrencyPair + " - " + profit.Timestamp + "</strong><br /><span class='Buy'>B: " + buy.Price + "</span> <span class='Sell'>S:" + sell.Price + "</span> - <span class='profit-amount'>A: " + sell.Amount + "</span><br /><strong>" + profit.Profit + "</strong></span><div>");
+
+                    $profitsContainer.append(row);
+                }
+            }
+
+            function clearOrders()
+            {
+                $(".buy-orders").empty();
+                $(".sell-orders").empty();
+            }
+
+            function sendMessage(messageType, payload)
+            {
+                var message =
+                {
+                    "MessageType": messageType,
+                    "Payload": payload
+                };
+
+                var json = JSON.stringify(message);
+
+                log("sending:\n" + json);
+
+                socket.send(json);
+            }
+
+
+            function log(payload)
+            {
+                //console.log(payload);
+
+                var $consoleContainer = $(".console");
+
+                var children = $consoleContainer.children();
+                if(children.length > 100)
+                    children.last().remove();
+
+                $consoleContainer.prepend("<p>" + payload + "</p>");
+            }
+
+            function formatTimestamp(timestamp)
+            {
+                var date = new Date(timestamp * 1000);
+
+                var hours = date.getHours();
+                var minutes = "0" + date.getMinutes();
+                var seconds = "0" + date.getSeconds();
+
+                // Will display time in 10:30:23 format
+                return hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+            }
+
+        });
+
+    </script>
+</html>

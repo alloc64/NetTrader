@@ -1,0 +1,35 @@
+{
+  "Generic":
+  {
+      "DatabasePath": "../../etc/CTrader.Database.db",
+      "ServerDomain": "nettrader.com",
+      "ServerPort": 12777,
+      "CertificatePath": "../../etc/crt/certificate.pfx",
+      "CertificatePassword": "$Ctrader$",
+      "UserLogin": "ETHCTraderWebSocket3327",
+      "UserPassword": "Gewdkl45ewNFD",
+      "IsSSLEnabled": false,
+
+      "Exchange":"GDAX",
+      "Budget":100,
+      "CurrencyPair":"ETH-EUR",
+      "DefaultTargetBasePrice": 100,
+      "TBPRecalculationOffset": 9999.0,
+      "TBPRecalculationPriceOffset": 100.0,
+      "StopLossThreshold": 9999.0,
+      "StopLossBasePriceOffset": 500.0,
+  },
+
+  "GDAX": 
+  {
+      "ApiKey": "",
+      "Passphrase": "",
+      "Secret": ""
+  },
+
+  "Binance":
+  {
+      "ApiKey": "",
+      "SecretKey": ""
+  }
+}

@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{AE61C6A9-5D13-411D-BCD6-255AD4FE3F83}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>NetTrader</RootNamespace>
+    <AssemblyName>NetTrader</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <BaseDirectory>NetTrader.Tests</BaseDirectory>
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>NetTrader.Tests\bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ExternalConsole>true</ExternalConsole>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <Optimize>true</Optimize>
+    <OutputPath>NetTrader.Tests\bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ExternalConsole>true</ExternalConsole>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="NetTrader.Tests\Program.cs" />
+    <Compile Include="NetTrader.Tests\Strategies\ITradeStrategy.cs" />
+    <Compile Include="NetTrader.Tests\Strategies\TieredStrategyTest.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="NetTrader.Tests\Program.cs">
+      <Link>Program.cs</Link>
+    </Compile>
+    <Compile Include="NetTrader.Tests\TestRunner.cs" />
+    <Compile Include="NetTrader.Tests\Gateways\GDAXProductGateway.cs" />
+    <Compile Include="NetTrader.Tests\Strategies\TradingStrategyTest.cs" />
+    <Compile Include="NetTrader.Tests\Gateways\GDAXRealtimeGateway.cs" />
+    <Compile Include="NetTrader.Tests\BacktestProcessor.cs" />
+    <Compile Include="NetTrader.Tests\BacktestProcessorBase.cs" />
+    <Compile Include="NetTrader.Tests\OrderProcessing\TestsOrderProcessor.cs" />
+    <Compile Include="NetTrader.Tests\Strategies\TieredStrategyTest.cs">
+      <Link>Strategies\Impl\Tiered\TieredStrategyTest.cs</Link>
+    </Compile>
+    <Compile Include="NetTrader.Tests\Strategies\Impl\Tiered\TieredStrategyBacktestProcessor.cs" />
+    <Compile Include="NetTrader.Tests\Strategies\PhasedStrategyBackTestProcessor.cs" />
+    <Compile Include="NetTrader.Tests\Strategies\Impl\StopLoss\StopLossBacktestProcessor.cs" />
+    <Compile Include="NetTrader.Tests\Strategies\Impl\StopLoss\StopLossStrategyTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="GDAX.NET\GDAX.NET.csproj">
+      <Project>{8D8880C8-B86F-44CD-B2B4-2A719E853800}</Project>
+      <Name>GDAX.NET</Name>
+    </ProjectReference>
+    <ProjectReference Include="NetTrader.Core\NetTrader.Core.csproj">
+      <Project>{0747daaf-f213-4ffb-a9cc-f12714abf1e2}</Project>
+      <Name>NetTrader.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Strategies\Impl\Tiered\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.8">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.8 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+</Project>
